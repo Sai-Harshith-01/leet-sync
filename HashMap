@@ -1,0 +1,232 @@
+import java.util.*;
+
+// 1. Count Frequencies in an Array
+// Goal: For each element, count how many times it appears.
+class CountFrequencies {
+    public static Map<Integer, Integer> countFrequencies(int[] arr) {
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int num : arr) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+        return frequencyMap;
+    }
+}
+
+// 2. Most Frequent Element
+// Goal: Find the element that appears most frequently; if tied, return the largest element.
+class MostFrequent {
+    public static int mostFrequent(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int maxFreq = 0;
+        int ans = Integer.MIN_VALUE;
+
+        for (int num : arr) {
+            int freq = map.getOrDefault(num, 0) + 1;
+            map.put(num, freq);
+
+            if (freq > maxFreq || (freq == maxFreq && num > ans)) {
+                maxFreq = freq;
+                ans = num;
+            }
+        }
+        return ans;
+    }
+}
+
+// 3. Count Distinct Elements in Every Window of Size K
+// Goal: For each window of size K, count distinct elements.
+class DistinctInWindow {
+    public static List<Integer> countDistinct(int[] arr, int k) {
+        List<Integer> result = new ArrayList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+
+        // Process first window
+        for (int i = 0; i < k; i++) {
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+        }
+        result.add(map.size());
+
+        // Slide the window
+        for (int i = k; i < arr.length; i++) {
+            // Remove left element of previous window
+            int left = arr[i - k];
+            map.put(left, map.get(left) - 1);
+            if (map.get(left) == 0) {
+                map.remove(left);
+            }
+
+            // Add new element of current window
+            int right = arr[i];
+            map.put(right, map.getOrDefault(right, 0) + 1);
+
+            result.add(map.size());
+        }
+        return result;
+    }
+}
+
+// 4. Check If Two Arrays Are Equal
+// Goal: Check if two arrays have the same elements with the same frequencies.
+class ArraysEqual {
+    public static boolean areEqual(int[] arr1, int[] arr2) {
+        if (arr1.length != arr2.length) return false;
+
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int num : arr1) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+        for (int num : arr2) {
+            if (!frequencyMap.containsKey(num) || frequencyMap.get(num) == 0) {
+                return false;
+            }
+            frequencyMap.put(num, frequencyMap.get(num) - 1);
+        }
+        return true;
+    }
+}
+
+// 5. Two Sum - Count Pairs with Target Sum
+// Goal: Find two indices where elements sum up to the target.
+class TwoSum {
+    public static int[] findTwoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[]{map.get(complement), i};
+            }
+            map.put(nums[i], i);
+        }
+        return new int[]{}; // If no solution found
+    }
+}
+
+// 6. Count Pairs with Absolute Difference Equal to K
+// Goal: Count pairs where the absolute difference is K.
+class PairsWithDifference {
+    public static int countPairsWithDifference(int[] arr, int k) {
+        Set<Integer> set = new HashSet<>();
+        int count = 0;
+        for (int num : arr) {
+            if (set.contains(num + k)) count++;
+            if (set.contains(num - k)) count++;
+            set.add(num);
+        }
+        return count / 2; // Each pair counted twice
+    }
+}
+// 7. Check If Array Pair Sums Divisible By K
+// Goal:
+// Every element should be paired such that
+// pair sum % k == 0
+
+class PairSumDivisibleByK {
+
+    public static boolean canPair(int[] arr, int k) {
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        // Store remainder frequencies
+        for(int num : arr) {
+
+            int rem = num % k;
+
+            map.put(rem, map.getOrDefault(rem, 0) + 1);
+        }
+
+        for(int rem : map.keySet()) {
+
+            // remainder 0 must occur even times
+            if(rem == 0) {
+
+                if(map.get(rem) % 2 != 0)
+                    return false;
+            }
+
+            // Example:
+            // k = 6
+            // remainder = 3
+            // 3 pairs with 3
+            else if(2 * rem == k) {
+
+                if(map.get(rem) % 2 != 0)
+                    return false;
+            }
+
+            // remainder r pairs with k-r
+            else {
+
+                if(map.get(rem) != map.getOrDefault(k - rem, 0))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+}
+// 8. Maximum Distance Between Two Occurrences
+// Goal:
+// Find largest distance between same elements
+
+class MaxDistance {
+
+    public static int maxDistance(int[] arr) {
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        int maxDist = 0;
+
+        for(int i = 0; i < arr.length; i++) {
+
+            // First occurrence
+            if(!map.containsKey(arr[i])) {
+
+                map.put(arr[i], i);
+            }
+
+            // Repeated element
+            else {
+
+                int distance = i - map.get(arr[i]);
+
+                maxDist = Math.max(maxDist, distance);
+            }
+        }
+
+        return maxDist;
+    }
+}
+// 9. Subarray With Given Sum
+// Negative numbers are allowed
+//
+// Goal:
+// Check if any continuous subarray
+// has sum = target
+
+class SubarraySum {
+
+    public static boolean hasSubarray(int[] arr, int target) {
+
+        HashSet<Integer> set = new HashSet<>();
+
+        int prefixSum = 0;
+
+        // Important
+        set.add(0);
+
+        for(int num : arr) {
+
+            prefixSum += num;
+
+            // Core Formula
+            if(set.contains(prefixSum - target)) {
+
+                return true;
+            }
+
+            set.add(prefixSum);
+        }
+
+        return false;
+    }
+}
