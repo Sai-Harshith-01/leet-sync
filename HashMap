@@ -230,3 +230,29 @@ class SubarraySum {
         return false;
     }
 }
+1. Count Frequencies
+   Pattern: HashMap<Element, Frequency>
+
+2. Most Frequent Element
+   Pattern: Frequency + Max
+
+3. Distinct Elements in Window
+   Pattern: Sliding Window + HashMap
+
+4. Arrays Equal
+   Pattern: Frequency Matching
+
+5. Two Sum
+   Formula: target - num
+
+6. Difference K
+   Formula: num + k
+
+7. Pair Sum Divisible By K
+   Formula: num % k
+
+8. Maximum Distance
+   Formula: currentIndex - firstIndex
+
+9. Subarray Sum K
+   Formula: prefixSum - target
