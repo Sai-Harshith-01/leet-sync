@@ -4,36 +4,40 @@ class Solution {
 
         int n = coins.length;
 
-        int dp[][] = new int[n][amount+1];
-
         int INF = (int)1e9;
+
+        int prev[] = new int[amount+1];
 
         for(int j=0;j<=amount;j++){
 
             if(j%coins[0]==0)
-                dp[0][j]=j/coins[0];
+                prev[j]=j/coins[0];
             else
-                dp[0][j]=INF;
+                prev[j]=INF;
         }
 
         for(int i=1;i<n;i++){
 
+            int curr[] = new int[amount+1];
+
             for(int j=0;j<=amount;j++){
 
-                int notTake = dp[i-1][j];
+                int notTake = prev[j];
 
                 int take = INF;
 
                 if(coins[i]<=j)
-                    take = 1 + dp[i][j-coins[i]];
+                    take = 1 + curr[j-coins[i]];
 
-                dp[i][j]=Math.min(take,notTake);
+                curr[j]=Math.min(take,notTake);
             }
+
+            prev=curr;
         }
 
-        if(dp[n-1][amount]>=INF)
+        if(prev[amount]>=INF)
             return -1;
 
-        return dp[n-1][amount];
+        return prev[amount];
     }
 }
