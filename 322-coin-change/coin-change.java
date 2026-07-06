@@ -2,39 +2,38 @@ class Solution {
 
     public int coinChange(int[] coins, int amount) {
 
-        int dp[][] = new int[coins.length][amount+1];
+        int n = coins.length;
 
-        for(int row[] : dp)
-            java.util.Arrays.fill(row,-1);
+        int dp[][] = new int[n][amount+1];
 
-        int ans = solve(coins.length-1, amount, coins, dp);
+        int INF = (int)1e9;
 
-        if(ans >= 1e9)
-            return -1;
+        for(int j=0;j<=amount;j++){
 
-        return ans;
-    }
-
-    int solve(int i, int amount, int coins[], int dp[][]){
-
-        if(i==0){
-
-            if(amount%coins[0]==0)
-                return amount/coins[0];
-
-            return (int)1e9;
+            if(j%coins[0]==0)
+                dp[0][j]=j/coins[0];
+            else
+                dp[0][j]=INF;
         }
 
-        if(dp[i][amount]!=-1)
-            return dp[i][amount];
+        for(int i=1;i<n;i++){
 
-        int notTake = solve(i-1, amount, coins, dp);
+            for(int j=0;j<=amount;j++){
 
-        int take = (int)1e9;
+                int notTake = dp[i-1][j];
 
-        if(coins[i]<=amount)
-            take = 1 + solve(i, amount-coins[i], coins, dp);
+                int take = INF;
 
-        return dp[i][amount] = Math.min(take,notTake);
+                if(coins[i]<=j)
+                    take = 1 + dp[i][j-coins[i]];
+
+                dp[i][j]=Math.min(take,notTake);
+            }
+        }
+
+        if(dp[n-1][amount]>=INF)
+            return -1;
+
+        return dp[n-1][amount];
     }
 }
