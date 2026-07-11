@@ -1,30 +1,47 @@
 class Solution {
+
     public boolean equalFrequency(String word) {
-        int[] cnt = new int[26];
-        for (int i = 0; i < word.length(); ++i) {
-            ++cnt[word.charAt(i) - 'a'];
+
+        int[] freq = new int[26];
+
+        
+        for (char ch : word.toCharArray()) {
+            freq[ch - 'a']++;
         }
-        for (int i = 0; i < 26; ++i) {
-            if (cnt[i] > 0) {
-                --cnt[i];
-                int x = 0;
-                boolean ok = true;
-                for (int v : cnt) {
-                    if (v == 0) {
-                        continue;
-                    }
-                    if (x > 0 && v != x) {
-                        ok = false;
-                        break;
-                    }
-                    x = v;
-                }
-                if (ok) {
-                    return true;
-                }
-                ++cnt[i];
-            }
+
+        
+        for (int i = 0; i < 26; i++) {
+
+            if (freq[i] == 0)
+                continue;
+
+            freq[i]--;
+
+            if (allEqual(freq))
+                return true;
+
+            freq[i]++;
         }
+
         return false;
+    }
+
+    public boolean allEqual(int[] freq) {
+
+        int expected = 0;
+
+        for (int f : freq) {
+
+            if (f == 0)
+                continue;
+
+            if (expected == 0)
+                expected = f;
+
+            else if (f != expected)
+                return false;
+        }
+
+        return true;
     }
 }
